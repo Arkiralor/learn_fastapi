@@ -4,6 +4,6 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.post("/")
-async def root ():
-    return {'message': 'Hello world!'}
+@app.post("/blog")
+async def create():
+    return {'response': 'Blog post created.'}
