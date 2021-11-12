@@ -13,4 +13,4 @@ app = FastAPI()
 
 @app.post("/blog")
 async def create(request: Blog):
-    return {'response': f'Blog post {request.title} created.'}
+    return {'response': f'Blog post: {request.title}, created.'}
