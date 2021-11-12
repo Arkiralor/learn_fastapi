@@ -1,13 +1,22 @@
+'''
+Import Block:
+'''
 from fastapi import FastAPI
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from . import schemas, models
 from .BlogDB import engine, SessionLocal
 
-
+'''
+Argument Declarations:
+'''
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
+
+'''
+Custom Functions:
+'''
 def get_db():
     db = SessionLocal()
 
@@ -16,6 +25,11 @@ def get_db():
     finally:
         db.close()
 
+
+
+'''
+API Views:
+'''
 @app.post("/blog")
 async def create(request: schemas.Blog, db:Session = Depends(get_db)):
     new_post = models.Blog(post_title=request.post_title, post_body=request.post_body)
