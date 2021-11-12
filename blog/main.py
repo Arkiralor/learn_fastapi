@@ -23,3 +23,16 @@ async def create(request: schemas.Blog, db:Session = Depends(get_db)):
     db.commit()
     db.refresh(new_post)
     return new_post
+
+@app.get("/blog")
+async def view(db:Session = Depends(get_db)):
+    all_posts = db.query(models.Blog).all()
+
+    return {'blog_posts':all_posts}
+
+
+@app.get("/blog/{pid:int}")
+async def view_blog(pid, db:Session = Depends(get_db)):
+    blog_post = db.query(models.Blog).filter(models.Blog.post_id == pid).first()
+
+    return blog_post
