@@ -6,8 +6,15 @@ class Blog(BaseModel):
     post_body: str
 
 
-class ShowBlog(Blog):
+class ShowBlog(BaseModel):
+    post_title: str
     post_body: str
 
     class Config():
         orm_mode = True
+
+
+class User(BaseModel):
+    user_name: str
+    user_email: str
+    user_password: str
