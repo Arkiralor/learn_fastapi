@@ -19,6 +19,8 @@ models.Base.metadata.create_all(bind=engine)
 '''
 Custom Functions:
 '''
+
+
 def get_db():
     db = SessionLocal()
 
@@ -28,13 +30,15 @@ def get_db():
         db.close()
 
 
-
 '''
 API Views:
 '''
+
+
 @app.post("/blog", status_code=status.HTTP_201_CREATED)
-async def create(request: schemas.Blog, db:Session = Depends(get_db)):
-    new_post = models.Blog(post_title=request.post_title, post_body=request.post_body)
+async def create(request: schemas.Blog, db: Session = Depends(get_db)):
+    new_post = models.Blog(post_title=request.post_title,
+                           post_body=request.post_body)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -42,9 +46,10 @@ async def create(request: schemas.Blog, db:Session = Depends(get_db)):
 
 
 @app.delete("/blog/delete/{pid:int}", status_code=status.HTTP_204_NO_CONTENT)
-async def destroy(pid, db:Session = Depends(get_db)):
+async def destroy(pid, db: Session = Depends(get_db)):
     try:
-        db.query(models.Blog).filter(models.Blog.post_id == pid).delete(synchronize_session=False)
+        db.query(models.Blog).filter(models.Blog.post_id ==
+                                     pid).delete(synchronize_session=False)
         db.commit()
         return {'response': f'Blog post with id= {pid} was successfully deleted.'}
 
@@ -53,25 +58,26 @@ async def destroy(pid, db:Session = Depends(get_db)):
 
 
 @app.put("/blog/update/{pid:int}", status_code=status.HTTP_202_ACCEPTED)
-async def update(pid, request:schemas.Blog ,db:Session = Depends(get_db)):
+async def update(pid, request: schemas.Blog, db: Session = Depends(get_db)):
     pass
 
 
 @app.get("/blog", status_code=status.HTTP_202_ACCEPTED)
-async def view(db:Session = Depends(get_db)):
+async def view(db: Session = Depends(get_db)):
     all_posts = db.query(models.Blog).all()
 
-    return {'blog_posts':all_posts}
+    return {'blog_posts': all_posts}
 
 
-@app.get("/blog/{pid:int}", status_code=status.HTTP_302_FOUND)
-async def view_blog(pid, response:Response, db:Session = Depends(get_db)):
-    blog_post = db.query(models.Blog).filter(models.Blog.post_id == pid).first()
+@app.get("/blog/{pid:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowBlog)
+async def view_blog(pid, response: Response, db: Session = Depends(get_db)):
+    blog_post = db.query(models.Blog).filter(
+        models.Blog.post_id == pid).first()
 
     if not blog_post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Blog post with id={pid}, not found.')
-        
+
         # response.status_code=status.HTTP_404_NOT_FOUND
         # return {'error': f'Blog post with id={pid}, not found.'}
 
