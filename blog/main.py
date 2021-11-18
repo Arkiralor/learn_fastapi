@@ -7,7 +7,7 @@ from typing import List
 from . import schemas, models
 from .BlogDB import engine
 from .utils import get_db
-from .utils import pwd_context
+from .hashing import Hashing
 
 
 '''
@@ -78,12 +78,9 @@ async def view_blog(pid, response: Response, db: Session = Depends(get_db)):
 @app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 async def create_user(request: schemas.User, db: Session = Depends(get_db)):
     
-    
-    hashed_pwd = pwd_context.hash(request.user_password)
-    
     new_user = models.User(user_name=request.user_name,
                            user_email=request.user_email,
-                           user_password=hashed_pwd)
+                           user_password=Hashing.bcrypt(password=request.user_password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
