@@ -5,16 +5,17 @@ An experimental web-application created to learn the basic and intermediate tech
 </p>
 
 
-#### Setup:
+## Setup:
 ```
 python -m venv env
 source env/bin/activate
 python -m pip install -r requirements.txt
 sudo chmod +x runserver.sh
+touch .env
 ```
-#### Run:
+## Run:
 ```
 ./runserver.sh
 ```
 
-#### Documentation: <root_url>/docs
+## Documentation: <root_url>/docs
