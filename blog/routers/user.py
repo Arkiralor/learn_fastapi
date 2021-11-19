@@ -9,10 +9,13 @@ from ..utils import get_db
 from ..hashing import Hashing
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/user',
+    tags= ['User']
+)
 
 # Create new User
-@router.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser, tags=['users'])
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 async def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
     new_user = models.User(user_name=request.user_name,
@@ -26,7 +29,7 @@ async def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
 
 # View list of all Users
-@router.get("/user/all", status_code=status.HTTP_302_FOUND, response_model=List[schemas.ShowUser], tags=['users'])
+@router.get("/all", status_code=status.HTTP_302_FOUND, response_model=List[schemas.ShowUser])
 async def show_users(db: Session = Depends(get_db)):
     all_users = db.query(models.User).all()
 
@@ -38,7 +41,7 @@ async def show_users(db: Session = Depends(get_db)):
 
 
 # Search for user via user_id
-@router.get("/user/{u_id:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowAllPosts, tags=['users'])
+@router.get("/{u_id:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowAllPosts)
 async def find_user(u_id, response: Response, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_id == u_id).first()
@@ -51,7 +54,7 @@ async def find_user(u_id, response: Response, db: Session = Depends(get_db)):
 
 
 # Search for user via user_name
-@router.get("/user/find_username={u_name:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users'])
+@router.get("/find_username={u_name:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser)
 async def find_user(u_name, response: Response, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_name == u_name).first()
@@ -64,7 +67,7 @@ async def find_user(u_name, response: Response, db: Session = Depends(get_db)):
 
 
 # Search for user via user_email
-@router.get("/user/search_email={u_email:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users'])
+@router.get("/search_email={u_email:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser)
 async def find_user(u_email, response: Response, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_email == u_email).first()

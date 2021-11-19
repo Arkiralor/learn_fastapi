@@ -8,10 +8,13 @@ from fastapi.params import Depends
 from ..utils import get_db
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/blog',
+    tags=['Blog']
+)
 
 # Add blog post to DB
-@router.post("/blog", status_code=status.HTTP_201_CREATED, tags=['blog_posts'])
+@router.post("/", status_code=status.HTTP_201_CREATED)
 async def create(request: schemas.Blog, db: Session = Depends(get_db)):
     new_post = models.Blog(post_title=request.post_title,
                            post_body=request.post_body,
@@ -23,7 +26,7 @@ async def create(request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 # Delete blog post in DB via Post_ID
-@router.delete("/blog/delete/{pid:int}", status_code=status.HTTP_204_NO_CONTENT, tags=['blog_posts'])
+@router.delete("/delete/{pid:int}", status_code=status.HTTP_204_NO_CONTENT)
 async def destroy(pid, db: Session = Depends(get_db)):
     try:
         db.query(models.Blog).filter(models.Blog.post_id ==
@@ -36,13 +39,13 @@ async def destroy(pid, db: Session = Depends(get_db)):
 
 
 # Update blog post in DB via Post_ID
-@router.put("/blog/update/{pid:int}", status_code=status.HTTP_202_ACCEPTED, tags=['blog_posts'])
+@router.put("/update/{pid:int}", status_code=status.HTTP_202_ACCEPTED)
 async def update(pid, request: schemas.Blog, db: Session = Depends(get_db)):
     pass
 
 
 # Get all blog posts from DB
-@router.get("/blog", status_code=status.HTTP_202_ACCEPTED, response_model=List[schemas.ShowBlog], tags=['blog_posts'])
+@router.get("/", status_code=status.HTTP_202_ACCEPTED, response_model=List[schemas.ShowBlog])
 async def view_all_posts(db: Session = Depends(get_db)):
     all_posts = db.query(models.Blog).all()
 
@@ -50,7 +53,7 @@ async def view_all_posts(db: Session = Depends(get_db)):
 
 
 # Search for a blog post via Post_ID
-@router.get("/blog/{pid:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowBlog, tags=['blog_posts'])
+@router.get("/{pid:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowBlog)
 async def view_blog(pid, response: Response, db: Session = Depends(get_db)):
     blog_post = db.query(models.Blog).filter(
         models.Blog.post_id == pid).first()
