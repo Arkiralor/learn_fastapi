@@ -47,3 +47,10 @@ class ShowAllPosts(BaseModel):
 
     class Config():
         orm_mode = True
+
+class Login(BaseModel):
+    user_email: str
+    user_password: str
+    
+    class Config():
+        orm_mode = True
