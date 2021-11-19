@@ -8,6 +8,7 @@ class Blog(Base):
     post_title = Column(String)
     post_body = Column(String)
 
+
 class User(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True, index=True)

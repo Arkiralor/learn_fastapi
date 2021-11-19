@@ -4,7 +4,6 @@ Custom Functions:
 from .BlogDB import SessionLocal
 
 
-
 def get_db():
     db = SessionLocal()
 

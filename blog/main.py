@@ -35,7 +35,7 @@ async def create(request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 # Delete blog post in DB via Post_ID
-@app.delete("/blog/delete/{pid:int}", status_code=status.HTTP_204_NO_CONTENT, tags=['blog_posts','delete'])
+@app.delete("/blog/delete/{pid:int}", status_code=status.HTTP_204_NO_CONTENT, tags=['blog_posts', 'delete'])
 async def destroy(pid, db: Session = Depends(get_db)):
     try:
         db.query(models.Blog).filter(models.Blog.post_id ==
@@ -54,7 +54,7 @@ async def update(pid, request: schemas.Blog, db: Session = Depends(get_db)):
 
 
 # Get all blog posts from DB
-@app.get("/blog", status_code=status.HTTP_202_ACCEPTED, response_model=List[schemas.ShowBlog], tags=['blog_posts','retrieve'])
+@app.get("/blog", status_code=status.HTTP_202_ACCEPTED, response_model=List[schemas.ShowBlog], tags=['blog_posts', 'retrieve'])
 async def view(db: Session = Depends(get_db)):
     all_posts = db.query(models.Blog).all()
 
@@ -62,7 +62,7 @@ async def view(db: Session = Depends(get_db)):
 
 
 # Search for a blog post via Post_ID
-@app.get("/blog/{pid:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowBlog, tags=['blog_posts','retrieve'])
+@app.get("/blog/{pid:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowBlog, tags=['blog_posts', 'retrieve'])
 async def view_blog(pid, response: Response, db: Session = Depends(get_db)):
     blog_post = db.query(models.Blog).filter(
         models.Blog.post_id == pid).first()
@@ -75,7 +75,7 @@ async def view_blog(pid, response: Response, db: Session = Depends(get_db)):
 
 
 # Create new User
-@app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser, tags=['users','create'])
+@app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser, tags=['users', 'create'])
 async def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
     new_user = models.User(user_name=request.user_name,
@@ -89,7 +89,7 @@ async def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
 
 # View list of all Users
-@app.get("/user/all", status_code=status.HTTP_302_FOUND, response_model=List[schemas.ShowUser], tags=['users','retrieve'])
+@app.get("/user/all", status_code=status.HTTP_302_FOUND, response_model=List[schemas.ShowUser], tags=['users', 'retrieve'])
 async def show_users(db: Session = Depends(get_db)):
     all_users = db.query(models.User).all()
 
@@ -101,7 +101,7 @@ async def show_users(db: Session = Depends(get_db)):
 
 
 # Search for user via user_id
-@app.get("/user/{u_id:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users','retrieve'])
+@app.get("/user/{u_id:int}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users', 'retrieve'])
 async def find_user(u_id, response: Response, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_id == u_id).first()
@@ -114,7 +114,7 @@ async def find_user(u_id, response: Response, db: Session = Depends(get_db)):
 
 
 # Search for user via user_name
-@app.get("/user/find_username={u_name:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users','retrieve'])
+@app.get("/user/find_username={u_name:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users', 'retrieve'])
 async def find_user(u_name, response: Response, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_name == u_name).first()
@@ -127,7 +127,7 @@ async def find_user(u_name, response: Response, db: Session = Depends(get_db)):
 
 
 # Search for user via user_email
-@app.get("/user/search_email={u_email:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users','retrieve'])
+@app.get("/user/search_email={u_email:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser, tags=['users', 'retrieve'])
 async def find_user(u_email, response: Response, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_email == u_email).first()
