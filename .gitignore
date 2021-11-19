@@ -134,3 +134,7 @@ dmypy.json
 # VSCode files
 .vscode
 vscode/
+
+# Image project files
+*.xcf
+*.psd

@@ -1,17 +1,5 @@
 from pydantic import BaseModel
-
-
-class Blog(BaseModel):
-    post_title: str
-    post_body: str
-
-
-class ShowBlog(BaseModel):
-    post_title: str
-    post_body: str
-
-    class Config():
-        orm_mode = True
+from typing import List
 
 
 class User(BaseModel):
@@ -23,6 +11,39 @@ class User(BaseModel):
 class ShowUser(BaseModel):
     user_name: str
     user_email: str
+
+    class Config():
+        orm_mode = True
+
+
+class ShowAuthor(BaseModel):
+    user_name: str
+
+    class Config():
+        orm_mode = True
+
+
+class Blog(BaseModel):
+    post_title: str
+    post_body: str
+
+    class Config():
+        orm_mode = True
+
+
+class ShowBlog(BaseModel):
+    post_title: str
+    post_body: str
+    author: ShowAuthor
+
+    class Config():
+        orm_mode = True
+
+
+class ShowAllPosts(BaseModel):
+    user_name: str
+    user_email: str
+    posts: List[Blog] = []
 
     class Config():
         orm_mode = True
