@@ -18,13 +18,13 @@ router = APIRouter(
 @router.post("/login")
 async def user_login(request: OAuth2PasswordRequestForm=Depends(), db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
-        models.User.user_email == request.user_email).first()
+        models.User.user_email == request.username).first()
 
     if not found_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No one with {request.user_email} found; kindly check.')
+                            detail=f'No one with {request.username} found; kindly check.')
 
-    if not Hashing.verify(found_user.user_password, request.user_password):
+    if not Hashing.verify(found_user.user_password, request.password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Password incorrect; please check if CapsLock is turned on.')
 

@@ -20,7 +20,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -35,10 +35,11 @@ def verify_token(token: str):
         headers={'WWW-Authenticate': 'Bearer'}
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithm=[ALGORITHM])
-        user_email: payload.get('sub')
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_email= payload.get('sub')
         if user_email is None:
             raise credentials_exception
         token_data = schemas.TokenData(user_email=user_email)
+        return token_data
     except JWTError:
         raise credentials_exception

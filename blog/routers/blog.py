@@ -16,11 +16,18 @@ router = APIRouter(
 )
 
 # Add blog post to DB
+
+
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create(request: schemas.Blog, db: Session = Depends(get_db), current_user: schemas.ShowUser = Depends(get_current_user)):
+async def create(request: schemas.Blog, db: Session = Depends(get_db), 
+                current_user: schemas.ShowUser = Depends(get_current_user)
+                ):
+    current_active_user: schemas.ShowUser = db.query(models.User).filter(
+        models.User.user_email == current_user.user_email).first()
+    
     new_post = models.Blog(post_title=request.post_title,
                            post_body=request.post_body,
-                           author_id=current_user.user_id)
+                           author_id=current_active_user.user_id)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
