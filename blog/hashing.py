@@ -9,5 +9,5 @@ class Hashing():
     def bcrypt(password: str):
         return pwd_context.hash(password)
 
-    def verify(db_password, request_password):
+    def verify(request_password, db_password):
         return pwd_context.verify(request_password, db_password)
