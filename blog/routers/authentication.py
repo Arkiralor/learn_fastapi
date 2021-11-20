@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 from ..utils import get_db
 from ..hashing import Hashing
-from .. import schemas, models
+from .. import models
 from ..JWToken import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 
 router = APIRouter(
