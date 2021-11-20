@@ -3,6 +3,8 @@ from fastapi.exceptions import HTTPException
 from starlette.responses import Response
 from sqlalchemy.orm import Session
 from typing import List
+
+from ..oauth2 import get_current_user
 from .. import schemas, models
 from fastapi.params import Depends
 from ..utils import get_db
@@ -15,10 +17,10 @@ router = APIRouter(
 
 # Add blog post to DB
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create(request: schemas.Blog, db: Session = Depends(get_db)):
+async def create(request: schemas.Blog, db: Session = Depends(get_db), current_user: schemas.ShowUser = Depends(get_current_user)):
     new_post = models.Blog(post_title=request.post_title,
                            post_body=request.post_body,
-                           author_id=1)
+                           author_id=current_user.user_id)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)

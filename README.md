@@ -19,3 +19,12 @@ touch .env
 ```
 
 ## Documentation: <root_url>/docs
+
+---
+## Notes
+
+For .ENV Keys, check:
+    ```
+    'blog/JWToken.py'
+    ```
+

@@ -62,3 +62,10 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     user_email: Optional[str] = None
+
+class ShowUser(BaseModel):
+    user_id: int
+    user_name: str
+
+    class Config():
+        orm_mode = True

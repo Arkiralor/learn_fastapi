@@ -2,6 +2,7 @@ from datetime import timedelta
 from fastapi import APIRouter
 from fastapi.params import Depends
 from fastapi.exceptions import HTTPException
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from starlette import status
 from ..utils import get_db
@@ -15,7 +16,7 @@ router = APIRouter(
 
 
 @router.post("/login")
-async def user_login(request: schemas.Login, db: Session = Depends(get_db)):
+async def user_login(request: OAuth2PasswordRequestForm=Depends(), db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_email == request.user_email).first()
 
