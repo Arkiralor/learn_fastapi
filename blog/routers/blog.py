@@ -46,7 +46,7 @@ async def destroy(pid,
 
         post_to_be_deleted = db.query(models.Blog).filter(models.Blog.post_id == pid).first()
 
-        if post_to_be_deleted.author_id == current_active_user.user_id:
+        if post_to_be_deleted.author_id == current_active_user.user_id or current_active_user.user_name == 'admin':
             db.query(models.Blog).filter(models.Blog.post_id ==
                                          pid).delete(synchronize_session=False)
             db.commit()
@@ -63,9 +63,28 @@ async def destroy(pid,
 
 
 # Update blog post in DB via Post_ID
-@router.put("/update/{pid:int}", status_code=status.HTTP_202_ACCEPTED)
-async def update(pid, request: schemas.Blog, db: Session = Depends(get_db)):
-    pass
+@router.put("/update/{pid:int}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Blog)
+async def update(pid, 
+                update: schemas.UpdateBlog, 
+                db: Session = Depends(get_db, ), 
+                current_user: schemas.ShowUser = Depends(get_current_user)):
+    try:
+        requestee: schemas.ShowUser = db.query(models.User).filter(
+                                                    models.User.user_email == current_user.user_email).first()
+
+        updated = db.query(models.Blog).filter(models.Blog.post_id == pid).first()
+        if requestee.user_id == updated.author_id:
+            updated = update.copy()
+        db.commit()
+        db.refresh(updated)
+        return updated
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='User is not authorised.'
+        )
+
 
 
 # Get all blog posts from DB

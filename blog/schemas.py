@@ -30,6 +30,13 @@ class Blog(BaseModel):
     class Config():
         orm_mode = True
 
+class UpdateBlog(BaseModel):
+    post_title: Optional[str] = None
+    post_body: Optional[str] = None
+
+    class Config():
+        orm_mode = True
+
 
 class ShowBlog(BaseModel):
     post_title: str

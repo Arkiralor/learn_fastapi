@@ -24,7 +24,7 @@ async def user_login(request: OAuth2PasswordRequestForm=Depends(), db: Session =
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No one with {request.username} found; kindly check.')
 
-    if not Hashing.verify(found_user.user_password, request.password):
+    if not Hashing.verify(request.password, found_user.user_password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Password incorrect; please check if CapsLock is turned on.')
 
