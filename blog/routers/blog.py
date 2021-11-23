@@ -36,7 +36,8 @@ async def create(request: schemas.Blog, db: Session = Depends(get_db),
 
 # Delete blog post in DB via Post_ID
 @router.delete("/delete/{pid:int}", status_code=status.HTTP_204_NO_CONTENT)
-async def destroy(pid, db: Session = Depends(get_db), 
+async def destroy(pid, 
+                db: Session = Depends(get_db), 
                 current_user: schemas.ShowUser = Depends(get_current_user)
                 ):
     try:
@@ -47,7 +48,7 @@ async def destroy(pid, db: Session = Depends(get_db),
 
         if post_to_be_deleted.author_id == current_active_user.user_id:
             db.query(models.Blog).filter(models.Blog.post_id ==
-                                        pid).delete(synchronize_session=False)
+                                         pid).delete(synchronize_session=False)
             db.commit()
             return {'response': f'Blog post with id= {pid} was successfully deleted.'}
         else:
@@ -55,7 +56,10 @@ async def destroy(pid, db: Session = Depends(get_db),
                                 detail=f'Bad Request: Credentials Unauthorised.')
 
     except Exception as e:
-        return {'Error': f'{e}. Blog post with id= {pid} does not exist.'}
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail= f'{e}. Blog post with id= {pid} does not exist.'
+        )
 
 
 # Update blog post in DB via Post_ID
