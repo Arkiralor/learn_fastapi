@@ -55,7 +55,7 @@ async def find_user(u_id, response: Response, db: Session = Depends(get_db)):
 
 # Search for user via user_name
 @router.get("/find_username={u_name:str}", status_code=status.HTTP_302_FOUND, response_model=schemas.ShowUser)
-async def find_user(u_name, response: Response, db: Session = Depends(get_db)):
+async def find_user(u_name, db: Session = Depends(get_db)):
     found_user = db.query(models.User).filter(
         models.User.user_name == u_name).first()
 
